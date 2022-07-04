@@ -4,8 +4,9 @@
   ],
   "watch": [
     "index.ts",
-    "src/**/*.ts"
+    "src/**/*"
   ],
+  "ext": "ts, graphql",
   "execMap": {
     "ts": "ts-node"
   }

@@ -4,8 +4,8 @@ import * as express from 'express';
 import * as http from 'http';
 import 'dotenv/config';
 
-import { resolvers } from './resolvers';
-import { typeDefs } from './typeDefs';
+import { resolvers, typeDefs } from './modules';
+import { UserAPI } from './modules/users/services/UserAPI';
 
 console.log('\nSTART!!!');
 const port = process.env.EXPRESS_PORT || 4000;
@@ -18,6 +18,13 @@ const startApolloServer = async (typeDefs, resolvers) => {
   const server = new ApolloServer({
     typeDefs,
     resolvers,
+    csrfPrevention: true,
+    cache: 'bounded',
+    dataSources: () => {
+      return {
+        userAPI: new UserAPI(),
+      };
+    },
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
   });
 
