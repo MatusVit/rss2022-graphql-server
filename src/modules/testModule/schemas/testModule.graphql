@@ -1,4 +1,0 @@
-type Query {
-  # Should return "Hello world!"
-  hello: String
-}

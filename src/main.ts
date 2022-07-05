@@ -1,10 +1,11 @@
-import { ApolloServer, gql } from 'apollo-server-express';
-import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core';
 import * as express from 'express';
 import * as http from 'http';
+import { ApolloServer } from 'apollo-server-express';
+import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core';
 import 'dotenv/config';
 
 import { resolvers, typeDefs } from './modules';
+import { GenresAPI } from './modules/genres/services/GenresAPI';
 import { UserAPI } from './modules/users/services/UserAPI';
 
 console.log('\nSTART!!!');
@@ -20,9 +21,14 @@ const startApolloServer = async (typeDefs, resolvers) => {
     resolvers,
     csrfPrevention: true,
     cache: 'bounded',
+    context: ({ req }) => {
+      const token = req.headers.authorization || '';
+      return { token };
+    },
     dataSources: () => {
       return {
         userAPI: new UserAPI(),
+        genresAPI: new GenresAPI(),
       };
     },
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],

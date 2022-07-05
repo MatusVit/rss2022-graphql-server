@@ -1,14 +1,14 @@
 type User {
   id: ID!
-  firstName: String
-  secondName: String
-  password: String
+  firstName: String!
+  secondName: String!
+  password: String!
   email: String!
 }
 
 type Query {
   user(id: ID!): User!
-  jwt(email: String, password: String): String
+  jwt(email: String!, password: String!): String
 }
 
 type Mutation {

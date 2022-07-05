@@ -1,4 +1,4 @@
-import { User } from './../schemas/user.type';
+import { User, UserFromAPI } from './../schemas/user.type';
 import { RESTDataSource } from 'apollo-datasource-rest';
 
 export class UserAPI extends RESTDataSource {
@@ -7,7 +7,7 @@ export class UserAPI extends RESTDataSource {
     this.baseURL = process.env.USERS_URL;
   }
 
-  async getUser(id): Promise<unknown> {
+  async getUser(id): Promise<UserFromAPI> {
     return this.get(`${encodeURIComponent(id)}`);
   }
 
@@ -15,7 +15,7 @@ export class UserAPI extends RESTDataSource {
     return this.post(`login`, { email, password });
   }
 
-  async postRegister({ email, password, firstName, lastName }): Promise<User> {
+  async postRegister({ email, password, firstName, lastName }): Promise<UserFromAPI> {
     return this.post(`register`, { email, password, firstName, lastName });
   }
 }
