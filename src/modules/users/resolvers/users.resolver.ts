@@ -1,32 +1,45 @@
-/*
-  {
-    _id: '62c2abd7fe035054846db5a9',
-    firstName: 'Vital1',
-    lastName: 'Matus',
-    password: '$2b$10$XX6EbUz41YI3SbXVAVTrPuBLvzsGNMl2PmQtVIIYD6olm3wDs28gW',
-    email: 'vital1@gmail.com',
-    __v: 0,
-  } 
-*/
+import { User } from './../schemas/user.type';
+
+const transformUser = (userFromApi): User => {
+  const {
+    _id: id,
+    firstName,
+    lastName: secondName,
+    password,
+    email,
+    // favouriteArtistIds // ! *** ???
+  } = userFromApi;
+  return {
+    id,
+    firstName,
+    secondName,
+    email,
+    password,
+  };
+};
 
 export default {
   Query: {
     user: async (_source, { id: queryId }, { dataSources }) => {
-      const {
-        _id: id,
+      const userFromApi = await dataSources.userAPI.getUser(queryId);
+      return transformUser(userFromApi);
+    },
+
+    jwt: async (_source, { email, password }, { dataSources }) => {
+      const { jwt } = await dataSources.userAPI.postJwt({ email, password });
+      return jwt;
+    },
+  },
+
+  Mutation: {
+    register: async (_source, { email, password, firstName, secondName }, { dataSources }) => {
+      const userFromApi = await dataSources.userAPI.postRegister({
+        email,
+        password,
         firstName,
         lastName: secondName,
-        password,
-        email,
-      } = await dataSources.userAPI.getUser(queryId);
-
-      return {
-        id,
-        firstName,
-        secondName,
-        email,
-        password,
-      };
+      });
+      return transformUser(userFromApi);
     },
   },
 };

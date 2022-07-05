@@ -1,3 +1,4 @@
+import { User } from './../schemas/user.type';
 import { RESTDataSource } from 'apollo-datasource-rest';
 
 export class UserAPI extends RESTDataSource {
@@ -10,11 +11,11 @@ export class UserAPI extends RESTDataSource {
     return this.get(`${encodeURIComponent(id)}`);
   }
 
-  // async getMostViewedMovies(limit = 10) {
-  //   const data = await this.get('movies', {
-  //     per_page: limit,
-  //     order_by: 'most_viewed',
-  //   });
-  //   return data.results;
-  // }
+  async postJwt({ email, password }): Promise<String> {
+    return this.post(`login`, { email, password });
+  }
+
+  async postRegister({ email, password, firstName, lastName }): Promise<User> {
+    return this.post(`register`, { email, password, firstName, lastName });
+  }
 }
