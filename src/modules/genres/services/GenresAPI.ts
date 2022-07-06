@@ -1,6 +1,6 @@
 import { RequestOptions, RESTDataSource } from 'apollo-datasource-rest';
 import { URLSearchParams } from 'url';
-import { GenreFromAPI } from './../schemas/genres.type';
+import { DeleteAnswer, GenreFromAPI } from './../schemas/genres.type';
 
 export class GenresAPI extends RESTDataSource {
   constructor() {
@@ -26,5 +26,20 @@ export class GenresAPI extends RESTDataSource {
       ...(offset && { offset: `${offset}` }),
     };
     return this.get('', objectParams);
+  }
+
+  async deleteById(id: string): Promise<DeleteAnswer> {
+    return this.delete(`${encodeURIComponent(id)}`);
+  }
+
+  async putUpdate(id, name, description, country, year): Promise<GenreFromAPI> {
+    const body = {
+      ...(name && { name }),
+      ...(description && { description }),
+      ...(country && { country }),
+      ...(year && { year }),
+    };
+
+    return this.put(`${encodeURIComponent(id)}`, body);
   }
 }

@@ -32,8 +32,14 @@ export default {
     },
 
     deleteGenre: async (_source, { id }, { dataSources, token }) => {
-      // todo ***
-      return null;
+      if (!token) return { message: 'No authorization' };
+
+      const deleteAnswer = await dataSources.genresAPI.deleteById(id);
+      const { deletedCount } = deleteAnswer;
+      return {
+        deletedCount,
+        message: deletedCount ? 'Delete was successful' : 'Nothing has been removed',
+      };
     },
 
     updateGenre: async (
@@ -41,8 +47,16 @@ export default {
       { id, name, description, country, year },
       { dataSources, token }
     ) => {
-      // todo ***
-      return null;
+      if (!token) return null;
+
+      const genreFromApi = await dataSources.genresAPI.putUpdate(
+        id,
+        name,
+        description,
+        country,
+        year
+      );
+      return transformGenre(genreFromApi);
     },
   },
 };
