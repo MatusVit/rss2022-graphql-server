@@ -1,26 +1,22 @@
 import { RequestOptions, RESTDataSource } from 'apollo-datasource-rest';
 import { DeleteAnswer } from 'src/modules/common/schemas/common.type';
-import { GenreFromAPI } from './../schemas/genres.type';
+import { ArtistFromAPI } from './../schemas/artists.type';
 
-export class GenresAPI extends RESTDataSource {
+export class ArtistsAPI extends RESTDataSource {
   constructor() {
     super();
-    this.baseURL = process.env.GENRES_URL;
+    this.baseURL = process.env.ARTISTS_URL;
   }
 
   willSendRequest(request: RequestOptions) {
     request.headers.set('Authorization', `Bearer ${this.context.token}`);
   }
 
-  async postCreate({ name, description, country, year }): Promise<GenreFromAPI> {
-    return this.post('', { name, description, country, year });
-  }
-
-  async getById(id: string): Promise<GenreFromAPI> {
+  async getById(id: string): Promise<ArtistFromAPI> {
     return this.get(`${encodeURIComponent(id)}`);
   }
 
-  async getAll(limit: number, offset: number): Promise<GenreFromAPI> {
+  async getAll(limit: number, offset: number): Promise<ArtistFromAPI> {
     const objectParams = {
       ...(limit && { limit: `${limit}` }),
       ...(offset && { offset: `${offset}` }),
@@ -28,18 +24,16 @@ export class GenresAPI extends RESTDataSource {
     return this.get('', objectParams);
   }
 
+  async postCreate({ bands: bandsIds, ...rest }): Promise<ArtistFromAPI> {
+    return this.post('', { bandsIds, ...rest });
+  }
+
   async deleteById(id: string): Promise<DeleteAnswer> {
     return this.delete(`${encodeURIComponent(id)}`);
   }
 
-  async putUpdate(id, name, description, country, year): Promise<GenreFromAPI> {
-    const body = {
-      ...(name && { name }),
-      ...(description && { description }),
-      ...(country && { country }),
-      ...(year && { year }),
-    };
-
+  async putUpdate({ id, bands: bandsIds, ...rest }): Promise<ArtistFromAPI> {
+    const body = { ...(bandsIds && { bandsIds }), ...rest };
     return this.put(`${encodeURIComponent(id)}`, body);
   }
 }

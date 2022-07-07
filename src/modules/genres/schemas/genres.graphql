@@ -6,11 +6,6 @@ type Genre {
   year: Int!
 }
 
-type DeleteAnswer {
-  deletedCount: Int
-  message: String
-}
-
 type Query {
   genre(id: ID!): Genre
   genres(limit: Int, offset: Int): [Genre]

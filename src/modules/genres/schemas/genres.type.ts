@@ -13,8 +13,3 @@ export type GenreFromAPI = {
   country: string;
   year: number;
 };
-
-export type DeleteAnswer = {
-  acknowledged: boolean;
-  deletedCount: number;
-};

@@ -1,3 +1,4 @@
+import { MESSAGE } from '../../../constants/messages';
 import { Genre, GenreFromAPI } from './../schemas/genres.type';
 
 const transformGenre = (genreFromApi: GenreFromAPI): Genre => {
@@ -32,13 +33,13 @@ export default {
     },
 
     deleteGenre: async (_source, { id }, { dataSources, token }) => {
-      if (!token) return { message: 'No authorization' };
+      if (!token) return { message: MESSAGE.NO_AUTHORIZATION };
 
       const deleteAnswer = await dataSources.genresAPI.deleteById(id);
       const { deletedCount } = deleteAnswer;
       return {
         deletedCount,
-        message: deletedCount ? 'Delete was successful' : 'Nothing has been removed',
+        message: deletedCount ? MESSAGE.SUCCESSFUL_DELETE : MESSAGE.NOTHING_DELETED,
       };
     },
 

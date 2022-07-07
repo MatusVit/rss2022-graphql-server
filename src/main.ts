@@ -7,6 +7,7 @@ import 'dotenv/config';
 import { resolvers, typeDefs } from './modules';
 import { GenresAPI } from './modules/genres/services/GenresAPI';
 import { UserAPI } from './modules/users/services/UserAPI';
+import { ArtistsAPI } from './modules/artists/services/ArtistsAPI';
 
 console.log('\nSTART!!!');
 const port = process.env.EXPRESS_PORT || 4000;
@@ -29,6 +30,7 @@ const startApolloServer = async (typeDefs, resolvers) => {
       return {
         userAPI: new UserAPI(),
         genresAPI: new GenresAPI(),
+        artistsAPI: new ArtistsAPI(),
       };
     },
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],

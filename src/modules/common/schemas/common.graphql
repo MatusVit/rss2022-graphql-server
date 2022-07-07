@@ -1,0 +1,4 @@
+type DeleteAnswer {
+  deletedCount: Int
+  message: String
+}
