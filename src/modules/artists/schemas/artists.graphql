@@ -39,7 +39,7 @@ type Query {
 }
 
 type Mutation {
-  createArtist(input: ArtistCreateInput): Artist
+  createArtist(artistInput: ArtistCreateInput): Artist
   deleteArtist(id: ID!): DeleteAnswer
-  updateArtist(input: ArtistUpdateInput): Artist
+  updateArtist(artistInput: ArtistUpdateInput): Artist
 }

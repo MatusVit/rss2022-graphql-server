@@ -8,6 +8,9 @@ import { resolvers, typeDefs } from './modules';
 import { GenresAPI } from './modules/genres/services/GenresAPI';
 import { UserAPI } from './modules/users/services/UserAPI';
 import { ArtistsAPI } from './modules/artists/services/ArtistsAPI';
+import { TracksAPI } from './modules/tracks/services/TracksAPI';
+import { AlbumsAPI } from './modules/albums/services/AlbumsAPI';
+import { BandsAPI } from './modules/bands/services/BandsAPI';
 
 console.log('\nSTART!!!');
 const port = process.env.EXPRESS_PORT || 4000;
@@ -31,6 +34,9 @@ const startApolloServer = async (typeDefs, resolvers) => {
         userAPI: new UserAPI(),
         genresAPI: new GenresAPI(),
         artistsAPI: new ArtistsAPI(),
+        tracksAPI: new TracksAPI(),
+        albumsAPI: new AlbumsAPI(),
+        bandsAPI: new BandsAPI(),
       };
     },
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],

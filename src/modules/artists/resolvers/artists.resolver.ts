@@ -29,7 +29,7 @@ export default {
   },
 
   Mutation: {
-    createArtist: async (_, { input }, { dataSources, token }) => {
+    createArtist: async (_, { artistInput: input }, { dataSources, token }) => {
       if (!token) return null;
 
       const artistFromApi = await dataSources.artistsAPI.postCreate(input);
@@ -47,7 +47,7 @@ export default {
       };
     },
 
-    updateArtist: async (_, { input }, { dataSources, token }) => {
+    updateArtist: async (_, { artistInput: input }, { dataSources, token }) => {
       if (!token) return null;
 
       const artistFromApi = await dataSources.artistsAPI.putUpdate(input);
