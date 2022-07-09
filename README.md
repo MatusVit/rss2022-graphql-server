@@ -45,3 +45,14 @@ GraphQL server implementation for Musicify service
    # all services prod mode
    npm run run:all:prod
    ```
+
+5. Clone repository
+   ```bash
+   https://github.com/MatusVit/rss2022-graphql-server.git
+   ```
+6. Switch to branch task5
+7. Run `npm ci` in project folder
+8. For start
+   - `npm run start` run project
+   - `npm run start:dev` run project in development mode
+9. `http://localhost:3000/api` (by default) use studio.apollographql for query and mutation
