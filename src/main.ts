@@ -1,3 +1,4 @@
+import { FavouritesAPI } from './modules/favourites/services/FavouritesAPI';
 import * as express from 'express';
 import * as http from 'http';
 import { ApolloServer } from 'apollo-server-express';
@@ -37,9 +38,11 @@ const startApolloServer = async (typeDefs, resolvers) => {
         tracksAPI: new TracksAPI(),
         albumsAPI: new AlbumsAPI(),
         bandsAPI: new BandsAPI(),
+        favouritesAPI: new FavouritesAPI(),
       };
     },
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+    debug: false,
   });
 
   await server.start();

@@ -1,7 +1,7 @@
 type Artist {
   id: ID!
-  firstName: String!
-  secondName: String!
+  firstName: String
+  secondName: String
   middleName: String
   birthDate: String
   birthPlace: String

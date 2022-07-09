@@ -1,5 +1,7 @@
 import { MESSAGE } from '../../../constants/messages';
 import { Artist, ArtistFromAPI } from './../schemas/artists.type';
+import { transformBand } from '../../bands/resolvers/band.resolver';
+import { UserInputError } from 'apollo-server-core';
 
 export const transformArtist = (artistFromApi: ArtistFromAPI): Artist => {
   const { _id: id, bandsIds: bands, ...rest } = artistFromApi;
@@ -22,21 +24,26 @@ export default {
   },
 
   Artist: {
-    bands: ({ bands }, __, { dataSources }) => {
-      return bands; // todo ***
+    bands: async ({ bands }, __, { dataSources }) => {
+      return await Promise.all(
+        bands.map(async (id) => {
+          const bandFromApi = await dataSources.bandsAPI.getById(id);
+          return transformBand(bandFromApi);
+        })
+      );
     },
   },
 
   Mutation: {
     createArtist: async (_, { artistInput: input }, { dataSources, token }) => {
-      if (!token) return { message: MESSAGE.NO_AUTHORIZATION };
+      if (!token) throw new UserInputError(MESSAGE.NO_AUTHORIZATION);
 
       const artistFromApi = await dataSources.artistsAPI.postCreate(input);
       return transformArtist(artistFromApi);
     },
 
     deleteArtist: async (_, { id }, { dataSources, token }) => {
-      if (!token) return { message: MESSAGE.NO_AUTHORIZATION };
+      if (!token) throw new UserInputError(MESSAGE.NO_AUTHORIZATION);
 
       const deleteAnswer = await dataSources.artistsAPI.deleteById(id);
       const { deletedCount } = deleteAnswer;
@@ -47,7 +54,7 @@ export default {
     },
 
     updateArtist: async (_, { artistInput: input }, { dataSources, token }) => {
-      if (!token) return { message: MESSAGE.NO_AUTHORIZATION };
+      if (!token) throw new UserInputError(MESSAGE.NO_AUTHORIZATION);
 
       const artistFromApi = await dataSources.artistsAPI.putUpdate(input);
       return transformArtist(artistFromApi);

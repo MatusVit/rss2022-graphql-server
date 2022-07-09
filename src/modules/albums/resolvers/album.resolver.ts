@@ -1,7 +1,12 @@
 import { Album, AlbumFromApi } from './../schemas/albums.type';
 import { MESSAGE } from '../../../constants/messages';
+import { transformArtist } from './../../artists/resolvers/artists.resolver';
+import { transformGenre } from './../../genres/resolvers/genres.resolver';
+import { transformBand } from './../../bands/resolvers/band.resolver';
+import { transformTrack } from './../../tracks/resolvers/track.resolver';
+import { UserInputError } from 'apollo-server-core';
 
-const transformAlbum = (artistFromApi: AlbumFromApi): Album => {
+export const transformAlbum = (artistFromApi: AlbumFromApi): Album => {
   const {
     _id: id,
     artistsIds: artists,
@@ -29,33 +34,53 @@ export default {
   },
 
   Album: {
-    artists: ({ artists }, __, { dataSources }) => {
-      return artists; // todo ***
+    artists: async ({ artists }, __, { dataSources }) => {
+      return await Promise.all(
+        artists.map(async (id) => {
+          const artistFromApi = await dataSources.artistsAPI.getById(id);
+          return transformArtist(artistFromApi);
+        })
+      );
     },
 
-    bands: ({ bands }, __, { dataSources }) => {
-      return bands; // todo ***
+    bands: async ({ bands }, __, { dataSources }) => {
+      return await Promise.all(
+        bands.map(async (id) => {
+          const bandFromApi = await dataSources.artistsAPI.getById(id);
+          return transformBand(bandFromApi);
+        })
+      );
     },
 
-    tracks: ({ tracks }, __, { dataSources }) => {
-      return tracks; // todo ***
+    tracks: async ({ tracks }, __, { dataSources }) => {
+      return await Promise.all(
+        tracks.map(async (id) => {
+          const trackFromApi = await dataSources.tracksAPI.getById(id);
+          return transformTrack(trackFromApi);
+        })
+      );
     },
 
-    genres: ({ genres }, __, { dataSources }) => {
-      return genres; // todo ***
+    genres: async ({ genres }, __, { dataSources }) => {
+      return await Promise.all(
+        genres.map(async (id) => {
+          const genreFromApi = await dataSources.genresAPI.getById(id);
+          return transformGenre(genreFromApi);
+        })
+      );
     },
   },
 
   Mutation: {
     createAlbum: async (_, { albumInput: input }, { dataSources: { albumsAPI }, token }) => {
-      if (!token) return { message: MESSAGE.NO_AUTHORIZATION };
+      if (!token) throw new UserInputError(MESSAGE.NO_AUTHORIZATION);
 
       const objectFromApi = await albumsAPI.postCreate(input);
       return transformAlbum(objectFromApi);
     },
 
     deleteAlbum: async (_, { id }, { dataSources: { albumsAPI }, token }) => {
-      if (!token) return { message: MESSAGE.NO_AUTHORIZATION };
+      if (!token) throw new UserInputError(MESSAGE.NO_AUTHORIZATION);
 
       const deleteAnswer = await albumsAPI.deleteById(id);
       const { deletedCount } = deleteAnswer;
@@ -66,7 +91,7 @@ export default {
     },
 
     updateAlbum: async (_, { albumInput: input }, { dataSources: { albumsAPI }, token }) => {
-      if (!token) return { message: MESSAGE.NO_AUTHORIZATION };
+      if (!token) throw new UserInputError(MESSAGE.NO_AUTHORIZATION);
 
       const objectFromApi = await albumsAPI.putUpdate(input);
       return transformAlbum(objectFromApi);

@@ -1,3 +1,4 @@
+import { UserInputError } from 'apollo-server-core';
 import { MESSAGE } from '../../../constants/messages';
 import { Genre, GenreFromAPI } from './../schemas/genres.type';
 
@@ -21,13 +22,15 @@ export default {
 
   Mutation: {
     createGenre: async (_, { genreInput: input }, { dataSources, token }) => {
-      if (!token) return { message: MESSAGE.NO_AUTHORIZATION };
+      if (!token) throw new UserInputError(MESSAGE.NO_AUTHORIZATION);
+
       const genreFromApi = await dataSources.genresAPI.postCreate(input);
       return transformGenre(genreFromApi);
     },
 
     deleteGenre: async (_, { id }, { dataSources, token }) => {
-      if (!token) return { message: MESSAGE.NO_AUTHORIZATION };
+      if (!token) throw new UserInputError(MESSAGE.NO_AUTHORIZATION);
+
       const deleteAnswer = await dataSources.genresAPI.deleteById(id);
       const { deletedCount } = deleteAnswer;
       return {
@@ -37,7 +40,8 @@ export default {
     },
 
     updateGenre: async (_, { genreInput: input }, { dataSources, token }) => {
-      if (!token) return { message: MESSAGE.NO_AUTHORIZATION };
+      if (!token) throw new UserInputError(MESSAGE.NO_AUTHORIZATION);
+
       const genreFromApi = await dataSources.genresAPI.putUpdate(input);
       return transformGenre(genreFromApi);
     },

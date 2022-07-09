@@ -2,8 +2,9 @@ import { MESSAGE } from '../../../constants/messages';
 import { Band, BandFromApi, Member, MemberFromApi } from '../schemas/bands.type';
 import { transformGenre } from './../../genres/resolvers/genres.resolver';
 import { transformArtist } from './../../artists/resolvers/artists.resolver';
+import { UserInputError } from 'apollo-server-core';
 
-const transformBand = (bandFromApi: BandFromApi): Band => {
+export const transformBand = (bandFromApi: BandFromApi): Band => {
   const { _id: id, members: membersFromApi, genresIds: genres, ...rest } = bandFromApi;
 
   const members = membersFromApi.map(({ _id: artistID, ...others }: MemberFromApi) => ({
@@ -56,13 +57,14 @@ export default {
 
   Mutation: {
     createBand: async (_, { bandInput: input }, { dataSources: { bandsAPI }, token }) => {
-      if (!token) return { message: MESSAGE.NO_AUTHORIZATION };
+      if (!token) throw new UserInputError(MESSAGE.NO_AUTHORIZATION);
+
       const objectFromApi = await bandsAPI.postCreate(input);
       return transformBand(objectFromApi);
     },
 
     deleteBand: async (_, { id }, { dataSources: { bandsAPI }, token }) => {
-      if (!token) return { message: MESSAGE.NO_AUTHORIZATION };
+      if (!token) throw new UserInputError(MESSAGE.NO_AUTHORIZATION);
 
       const deleteAnswer = await bandsAPI.deleteById(id);
       const { deletedCount } = deleteAnswer;
@@ -73,7 +75,7 @@ export default {
     },
 
     updateBand: async (_, { bandInput: input }, { dataSources: { bandsAPI }, token }) => {
-      if (!token) return { message: MESSAGE.NO_AUTHORIZATION };
+      if (!token) throw new UserInputError(MESSAGE.NO_AUTHORIZATION);
 
       const objectFromApi = await bandsAPI.putUpdate(input);
       return transformBand(objectFromApi);
