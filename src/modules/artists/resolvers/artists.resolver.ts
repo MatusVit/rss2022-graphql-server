@@ -1,7 +1,7 @@
 import { MESSAGE } from '../../../constants/messages';
 import { Artist, ArtistFromAPI } from './../schemas/artists.type';
 
-const transformArtist = (artistFromApi: ArtistFromAPI): Artist => {
+export const transformArtist = (artistFromApi: ArtistFromAPI): Artist => {
   const { _id: id, bandsIds: bands, ...rest } = artistFromApi;
   return { id, bands, ...rest };
 };
@@ -10,7 +10,6 @@ export default {
   Query: {
     artist: async (_, { id }, { dataSources }) => {
       const artistFromApi = await dataSources.artistsAPI.getById(id);
-      console.log('artistFromApi', artistFromApi);
       return transformArtist(artistFromApi);
     },
 
@@ -30,7 +29,7 @@ export default {
 
   Mutation: {
     createArtist: async (_, { artistInput: input }, { dataSources, token }) => {
-      if (!token) return null;
+      if (!token) return { message: MESSAGE.NO_AUTHORIZATION };
 
       const artistFromApi = await dataSources.artistsAPI.postCreate(input);
       return transformArtist(artistFromApi);
@@ -48,7 +47,7 @@ export default {
     },
 
     updateArtist: async (_, { artistInput: input }, { dataSources, token }) => {
-      if (!token) return null;
+      if (!token) return { message: MESSAGE.NO_AUTHORIZATION };
 
       const artistFromApi = await dataSources.artistsAPI.putUpdate(input);
       return transformArtist(artistFromApi);

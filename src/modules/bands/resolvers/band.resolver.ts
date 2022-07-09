@@ -1,11 +1,13 @@
 import { MESSAGE } from '../../../constants/messages';
 import { Band, BandFromApi, Member, MemberFromApi } from '../schemas/bands.type';
+import { transformGenre } from './../../genres/resolvers/genres.resolver';
+import { transformArtist } from './../../artists/resolvers/artists.resolver';
 
 const transformBand = (bandFromApi: BandFromApi): Band => {
   const { _id: id, members: membersFromApi, genresIds: genres, ...rest } = bandFromApi;
 
-  const members = membersFromApi.map(({ _id: artistId, ...others }: MemberFromApi) => ({
-    artistId,
+  const members = membersFromApi.map(({ _id: artistID, ...others }: MemberFromApi) => ({
+    artistID,
     ...others,
   }));
 
@@ -26,34 +28,55 @@ export default {
   },
 
   Band: {
-    members: ({ members }, __, { dataSources }) => {
-      return members; // todo ***
+    members: async ({ members }, __, { dataSources }) => {
+      return await Promise.all(
+        members.map(async (member: Member) => {
+          const artistFromApi = await dataSources.artistsAPI.getById(member.artistID);
+          const { id, firstName, secondName, middleName } = transformArtist(artistFromApi);
+          return {
+            id,
+            firstName,
+            secondName,
+            middleName,
+            instrument: member.instrument,
+            years: member.years,
+          };
+        })
+      );
     },
-
-    genres: ({ genres }, __, { dataSources }) => {
-      return genres; // todo ***
+    genres: async ({ genres }, __, { dataSources }) => {
+      return await Promise.all(
+        genres.map(async (genreId) => {
+          const genreFromApi = await dataSources.genresAPI.getById(genreId);
+          return transformGenre(genreFromApi);
+        })
+      );
     },
   },
 
   Mutation: {
-    //   createAlbum: async (_, { albumInput: input }, { dataSources: { bandsAPI }, token }) => {
-    //     if (!token) return null;
-    //     const objectFromApi = await bandsAPI.postCreate(input);
-    //     return transformAlbum(objectFromApi);
-    //   },
-    //   deleteAlbum: async (_, { id }, { dataSources: { bandsAPI }, token }) => {
-    //     if (!token) return { message: MESSAGE.NO_AUTHORIZATION };
-    //     const deleteAnswer = await bandsAPI.deleteById(id);
-    //     const { deletedCount } = deleteAnswer;
-    //     return {
-    //       deletedCount,
-    //       message: deletedCount ? MESSAGE.SUCCESSFUL_DELETE : MESSAGE.NOTHING_DELETED,
-    //     };
-    //   },
-    //   updateAlbum: async (_, { albumInput: input }, { dataSources: { bandsAPI }, token }) => {
-    //     if (!token) return null;
-    //     const objectFromApi = await bandsAPI.putUpdate(input);
-    //     return transformAlbum(objectFromApi);
-    //   },
+    createBand: async (_, { bandInput: input }, { dataSources: { bandsAPI }, token }) => {
+      if (!token) return { message: MESSAGE.NO_AUTHORIZATION };
+      const objectFromApi = await bandsAPI.postCreate(input);
+      return transformBand(objectFromApi);
+    },
+
+    deleteBand: async (_, { id }, { dataSources: { bandsAPI }, token }) => {
+      if (!token) return { message: MESSAGE.NO_AUTHORIZATION };
+
+      const deleteAnswer = await bandsAPI.deleteById(id);
+      const { deletedCount } = deleteAnswer;
+      return {
+        deletedCount,
+        message: deletedCount ? MESSAGE.SUCCESSFUL_DELETE : MESSAGE.NOTHING_DELETED,
+      };
+    },
+
+    updateBand: async (_, { bandInput: input }, { dataSources: { bandsAPI }, token }) => {
+      if (!token) return { message: MESSAGE.NO_AUTHORIZATION };
+
+      const objectFromApi = await bandsAPI.putUpdate(input);
+      return transformBand(objectFromApi);
+    },
   },
 };

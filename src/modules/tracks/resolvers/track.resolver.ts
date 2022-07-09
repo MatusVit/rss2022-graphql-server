@@ -46,15 +46,13 @@ export default {
 
   Mutation: {
     createTrack: async (_, { trackInput: input }, { dataSources: { tracksAPI }, token }) => {
-      if (!token) return null;
-
+      if (!token) return { message: MESSAGE.NO_AUTHORIZATION };
       const trackFromApi = await tracksAPI.postCreate(input);
       return transformTrack(trackFromApi);
     },
 
     deleteTrack: async (_, { id }, { dataSources: { tracksAPI }, token }) => {
       if (!token) return { message: MESSAGE.NO_AUTHORIZATION };
-
       const deleteAnswer = await tracksAPI.deleteById(id);
       const { deletedCount } = deleteAnswer;
       return {
@@ -64,7 +62,7 @@ export default {
     },
 
     updateTrack: async (_, { trackInput: input }, { dataSources: { tracksAPI }, token }) => {
-      if (!token) return null;
+      if (!token) return { message: MESSAGE.NO_AUTHORIZATION };
 
       const trackFromApi = await tracksAPI.putUpdate(input);
       return transformTrack(trackFromApi);

@@ -12,8 +12,8 @@ export class GenresAPI extends RESTDataSource {
     request.headers.set('Authorization', `Bearer ${this.context.token}`);
   }
 
-  async postCreate({ name, description, country, year }): Promise<GenreFromAPI> {
-    return this.post('', { name, description, country, year });
+  async postCreate(input): Promise<GenreFromAPI> {
+    return this.post('', input);
   }
 
   async getById(id: string): Promise<GenreFromAPI> {
@@ -32,14 +32,8 @@ export class GenresAPI extends RESTDataSource {
     return this.delete(`${encodeURIComponent(id)}`);
   }
 
-  async putUpdate(id, name, description, country, year): Promise<GenreFromAPI> {
-    const body = {
-      ...(name && { name }),
-      ...(description && { description }),
-      ...(country && { country }),
-      ...(year && { year }),
-    };
-
+  async putUpdate(id, ...rest): Promise<GenreFromAPI> {
+    const body = rest;
     return this.put(`${encodeURIComponent(id)}`, body);
   }
 }

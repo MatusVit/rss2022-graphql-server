@@ -23,7 +23,7 @@ export interface MemberFromApi {
 }
 
 export interface Member {
-  artistId: String;
+  artistID: String;
   instrument: string;
   years: [string];
 }

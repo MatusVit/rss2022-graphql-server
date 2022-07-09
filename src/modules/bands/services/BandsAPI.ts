@@ -24,21 +24,29 @@ export class BandsAPI extends RESTDataSource {
     return this.get('', objectParams);
   }
 
-  async postCreate(input: Band): Promise<BandFromApi> {
-    return this.post('', input);
+  async postCreate({ genres: genresIds, ...rest }: Band): Promise<BandFromApi> {
+    return this.post('', { genresIds, ...rest });
   }
 
   async deleteById(id: string): Promise<DeleteAnswer> {
     return this.delete(`${encodeURIComponent(id)}`);
   }
 
-  async putUpdate({ id, name, origin, members, website, genres, ...rest }): Promise<BandFromApi> {
+  async putUpdate({
+    id,
+    name,
+    origin,
+    members,
+    website,
+    genres: genresIds,
+    ...rest
+  }): Promise<BandFromApi> {
     const body = {
       ...(name && { name }),
       ...(origin && { origin }),
       ...(members && { members }),
       ...(website && { website }),
-      ...(genres && { genres }),
+      ...(genresIds && { genresIds }),
       ...rest,
     };
     return this.put(`${encodeURIComponent(id)}`, body);

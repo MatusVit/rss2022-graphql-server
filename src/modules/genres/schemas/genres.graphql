@@ -1,9 +1,24 @@
 type Genre {
   id: ID!
+  name: String
+  description: String
+  country: String
+  year: Int
+}
+
+input CreateGenreInput {
   name: String!
   description: String!
   country: String!
   year: Int!
+}
+
+input UpdateGenreInput {
+  id: ID!
+  name: String
+  description: String
+  country: String
+  year: Int
 }
 
 type Query {
@@ -12,7 +27,7 @@ type Query {
 }
 
 type Mutation {
-  createGenre(name: String!, description: String!, country: String!, year: Int!): Genre
+  createGenre(genreInput: CreateGenreInput): Genre
   deleteGenre(id: ID!): DeleteAnswer
-  updateGenre(id: ID!, name: String, description: String, country: String, year: Int): Genre
+  updateGenre(genreInput: UpdateGenreInput): Genre
 }

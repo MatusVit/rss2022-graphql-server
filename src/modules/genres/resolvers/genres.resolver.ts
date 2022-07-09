@@ -1,40 +1,33 @@
 import { MESSAGE } from '../../../constants/messages';
 import { Genre, GenreFromAPI } from './../schemas/genres.type';
 
-const transformGenre = (genreFromApi: GenreFromAPI): Genre => {
-  const { _id: id, name, description, country, year } = genreFromApi;
-  return { id, name, description, country, year };
+export const transformGenre = (genreFromApi: GenreFromAPI): Genre => {
+  const { _id: id, ...rest } = genreFromApi;
+  return { id, ...rest };
 };
 
 export default {
   Query: {
-    genre: async (_source, { id }, { dataSources }) => {
+    genre: async (_, { id }, { dataSources }) => {
       const genreFromApi = await dataSources.genresAPI.getById(id);
       return transformGenre(genreFromApi);
     },
 
-    genres: async (_source, { limit, offset }, { dataSources }) => {
+    genres: async (_, { limit, offset }, { dataSources }) => {
       const genresObject = await dataSources.genresAPI.getAll(limit, offset);
       return genresObject?.items.map((genreFromApi: GenreFromAPI) => transformGenre(genreFromApi));
     },
   },
 
   Mutation: {
-    createGenre: async (_source, { name, description, country, year }, { dataSources, token }) => {
-      if (!token) return null;
-
-      const genreFromApi = await dataSources.genresAPI.postCreate({
-        name,
-        description,
-        country,
-        year,
-      });
+    createGenre: async (_, { genreInput: input }, { dataSources, token }) => {
+      if (!token) return { message: MESSAGE.NO_AUTHORIZATION };
+      const genreFromApi = await dataSources.genresAPI.postCreate(input);
       return transformGenre(genreFromApi);
     },
 
-    deleteGenre: async (_source, { id }, { dataSources, token }) => {
+    deleteGenre: async (_, { id }, { dataSources, token }) => {
       if (!token) return { message: MESSAGE.NO_AUTHORIZATION };
-
       const deleteAnswer = await dataSources.genresAPI.deleteById(id);
       const { deletedCount } = deleteAnswer;
       return {
@@ -43,20 +36,9 @@ export default {
       };
     },
 
-    updateGenre: async (
-      _source,
-      { id, name, description, country, year },
-      { dataSources, token }
-    ) => {
-      if (!token) return null;
-
-      const genreFromApi = await dataSources.genresAPI.putUpdate(
-        id,
-        name,
-        description,
-        country,
-        year
-      );
+    updateGenre: async (_, { genreInput: input }, { dataSources, token }) => {
+      if (!token) return { message: MESSAGE.NO_AUTHORIZATION };
+      const genreFromApi = await dataSources.genresAPI.putUpdate(input);
       return transformGenre(genreFromApi);
     },
   },

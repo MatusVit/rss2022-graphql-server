@@ -1,7 +1,7 @@
 type Artist {
   id: ID!
-  firstName: String
-  secondName: String
+  firstName: String!
+  secondName: String!
   middleName: String
   birthDate: String
   birthPlace: String
@@ -13,10 +13,10 @@ type Artist {
 input ArtistCreateInput {
   firstName: String!
   secondName: String!
-  middleName: String!
-  birthDate: String!
-  birthPlace: String!
-  country: String!
+  middleName: String
+  birthDate: String
+  birthPlace: String
+  country: String
   bands: [ID]!
   instruments: [String]!
 }

@@ -48,7 +48,7 @@ export default {
 
   Mutation: {
     createAlbum: async (_, { albumInput: input }, { dataSources: { albumsAPI }, token }) => {
-      if (!token) return null;
+      if (!token) return { message: MESSAGE.NO_AUTHORIZATION };
 
       const objectFromApi = await albumsAPI.postCreate(input);
       return transformAlbum(objectFromApi);
@@ -66,7 +66,7 @@ export default {
     },
 
     updateAlbum: async (_, { albumInput: input }, { dataSources: { albumsAPI }, token }) => {
-      if (!token) return null;
+      if (!token) return { message: MESSAGE.NO_AUTHORIZATION };
 
       const objectFromApi = await albumsAPI.putUpdate(input);
       return transformAlbum(objectFromApi);
