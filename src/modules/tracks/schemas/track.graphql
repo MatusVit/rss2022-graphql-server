@@ -11,12 +11,12 @@ type Track {
 
 input CreateTrackInput {
   title: String!
-  album: ID!
-  artists: [ID]!
-  bands: [ID]!
-  duration: Int!
-  released: Int!
-  genres: [ID]!
+  album: ID
+  artists: [ID]
+  bands: [ID]
+  duration: Int
+  released: Int
+  genres: [ID]
 }
 
 input UpdateTrackInput {

@@ -4,7 +4,7 @@ type Band {
   origin: String
   members: [Member]
   website: String
-  genres: [Genre]!
+  genres: [Genre]
 }
 
 type Member {

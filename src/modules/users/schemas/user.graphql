@@ -1,8 +1,8 @@
 type User {
   id: ID!
-  firstName: String!
-  secondName: String!
-  password: String!
+  firstName: String
+  secondName: String
+  password: String
   email: String!
 }
 
@@ -11,6 +11,13 @@ type Query {
   jwt(email: String!, password: String!): String
 }
 
+input RegisterUserInput {
+  email: String!
+  password: String!
+  firstName: String!
+  secondName: String!
+}
+
 type Mutation {
-  register(email: String!, password: String!, firstName: String!, secondName: String!): User!
+  register(userInput: RegisterUserInput): User!
 }

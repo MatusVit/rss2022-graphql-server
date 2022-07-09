@@ -13,7 +13,7 @@ export class ArtistsAPI extends RESTDataSource {
   }
 
   async getById(id: string): Promise<ArtistFromAPI> {
-    return this.get(`${encodeURIComponent(id)}`);
+    return this.get(id);
   }
 
   async getAll(limit: number, offset: number): Promise<ArtistFromAPI> {

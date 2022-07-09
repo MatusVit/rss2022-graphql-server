@@ -32,8 +32,8 @@ export class GenresAPI extends RESTDataSource {
     return this.delete(`${encodeURIComponent(id)}`);
   }
 
-  async putUpdate(id, ...rest): Promise<GenreFromAPI> {
+  async putUpdate({ id, ...rest }): Promise<GenreFromAPI> {
     const body = rest;
-    return this.put(`${encodeURIComponent(id)}`, body);
+    return this.put(id, body);
   }
 }

@@ -32,8 +32,12 @@ export default {
   },
 
   Track: {
-    album: async ({ id }, __, { dataSources }) => {
+    album: async ({ album: id }, __, { dataSources }) => {
+      if (!id) return null;
+
       const objectFromApi = await dataSources.albumsAPI.getById(id);
+      console.log('objectFromApi>>>', objectFromApi);
+
       return transformAlbum(objectFromApi);
     },
 

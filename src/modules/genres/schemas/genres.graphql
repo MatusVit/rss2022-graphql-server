@@ -8,9 +8,9 @@ type Genre {
 
 input CreateGenreInput {
   name: String!
-  description: String!
-  country: String!
-  year: Int!
+  description: String
+  country: String
+  year: Int
 }
 
 input UpdateGenreInput {
