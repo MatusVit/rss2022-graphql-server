@@ -56,3 +56,49 @@ GraphQL server implementation for Musicify service
    - `npm run start` run project
    - `npm run start:dev` run project in development mode
 9. `http://localhost:3000/api` (by default) use studio.apollographql for query and mutation
+10. Schema
+
+```
+type Query {
+      album(id: ID!): Album
+      albums(limit: Int, offset: Int): [Album]
+      artist(id: ID!): Artist
+      artists(limit: Int, offset: Int): [Artist]
+      band(id: ID!): Band
+      bands(limit: Int, offset: Int): [Band]
+      favourites: Favourites
+      genre(id: ID!): Genre
+      genres(limit: Int, offset: Int): [Genre]
+      track(id: ID!): Track
+      tracks(limit: Int, offset: Int): [Track]
+      user(id: ID!): User!
+      jwt(email: String!, password: String!): String
+}
+
+type Mutation {
+      createAlbum(albumInput: CreateAlbumInput): Album
+      deleteAlbum(id: ID!): DeleteAnswer
+      updateAlbum(albumInput: UpdateAlbumInput): Album
+      createArtist(artistInput: ArtistCreateInput): Artist
+      deleteArtist(id: ID!): DeleteAnswer
+      updateArtist(artistInput: ArtistUpdateInput): Artist
+      createBand(bandInput: CreateBandInput): Band
+      deleteBand(id: ID!): DeleteAnswer
+      updateBand(bandInput: UpdateBandInput): Band
+      addTrackToFavourites(id: ID!): Favourites
+      addBandToFavourites(id: ID!): Favourites
+      addArtistToFavourites(id: ID!): Favourites
+      addGenreToFavourites(id: ID!): Favourites
+      deleteTrackToFavourites(id: ID!): Favourites
+      deleteBandToFavourites(id: ID!): Favourites
+      deleteArtistToFavourites(id: ID!): Favourites
+      deleteGenreToFavourites(id: ID!): Favourites
+      createGenre(genreInput: CreateGenreInput): Genre
+      deleteGenre(id: ID!): DeleteAnswer
+      updateGenre(genreInput: UpdateGenreInput): Genre
+      createTrack(trackInput: CreateTrackInput): Track
+      deleteTrack(id: ID!): DeleteAnswer
+      updateTrack(trackInput: UpdateTrackInput): Track
+      register(userInput: RegisterUserInput): User!
+}
+```
