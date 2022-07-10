@@ -36,8 +36,6 @@ export default {
       if (!id) return null;
 
       const objectFromApi = await dataSources.albumsAPI.getById(id);
-      console.log('objectFromApi>>>', objectFromApi);
-
       return transformAlbum(objectFromApi);
     },
 
@@ -53,7 +51,7 @@ export default {
     bands: async ({ bands }, __, { dataSources }) => {
       return await Promise.all(
         bands.map(async (id) => {
-          const bandFromApi = await dataSources.artistsAPI.getById(id);
+          const bandFromApi = await dataSources.bandsAPI.getById(id);
           return transformBand(bandFromApi);
         })
       );
