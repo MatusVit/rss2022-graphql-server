@@ -1,0 +1,42 @@
+{
+  "name": "rss2022-graphql-server",
+  "version": "1.0.0",
+  "description": "GraphQL server implementation for Musicify service",
+  "main": "index.js",
+  "scripts": {
+    "start:dev": "nodemon ./src/main.ts",
+    "start": "ts-node ./src/main.ts",
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MatusVit/rss2022-graphql-server.git"
+  },
+  "author": "MatusVit",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MatusVit/rss2022-graphql-server/issues"
+  },
+  "homepage": "https://github.com/MatusVit/rss2022-graphql-server#readme",
+  "dependencies": {
+    "@graphql-tools/load-files": "6.6.0",
+    "@graphql-tools/merge": "8.3.0",
+    "@graphql-tools/schema": "8.5.0",
+    "apollo-datasource-rest": "^3.6.1",
+    "apollo-server-core": "^3.9.0",
+    "apollo-server-express": "^3.9.0",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "graphql": "^16.5.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.13",
+    "@types/node": "^18.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.30.0",
+    "@typescript-eslint/parser": "^5.30.0",
+    "eslint": "^8.18.0",
+    "nodemon": "^2.0.18",
+    "ts-node": "^10.8.1",
+    "typescript": "^4.7.4"
+  }
+}
